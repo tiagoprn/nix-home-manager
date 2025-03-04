@@ -21,7 +21,7 @@ NOTE: This is my personal nix user environment, tailored to my needs as a softwa
 
 ``` bash
 
-$ sh <(curl -L https://nixos.org/nix/install) --no-daemon
+sh <(curl -L https://nixos.org/nix/install) --no-daemon
 
 
 ```
@@ -50,7 +50,7 @@ nix-shell '<home-manager>' -A install
 
 ``` bash
 
-$ mv ~/.config/home-manager/home.nix ~/.config/home-manager/home.nix.ORIG && \
+mv ~/.config/home-manager/home.nix ~/.config/home-manager/home.nix.ORIG && \
     ln -s /storage/src/nix-home-manager/home.nix ~/.config/home-manager/home.nix
 
 ```
@@ -60,7 +60,7 @@ $ mv ~/.config/home-manager/home.nix ~/.config/home-manager/home.nix.ORIG && \
 
 ``` bash
 
-$ home-manager build
+home-manager build
 
 ```
 
@@ -70,7 +70,7 @@ $ home-manager build
 
 ``` bash
 
-$ home-manager switch
+home-manager switch
 
 ```
 
@@ -80,7 +80,7 @@ $ home-manager switch
 ``` bash
 
 # Update the nixpkgs channel && test configuration && apply configuration:
-$ nix-channel --update && home-manager build && home-manager switch
+nix-channel --update && home-manager build && home-manager switch
 
 ```
 
