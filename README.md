@@ -16,9 +16,23 @@ Home-Manager is a tool built on the Nix package manager that allows you to decla
 
 NOTE: This is my personal nix user environment, tailored to my needs as a software developer. It was tested on Ubuntu 22.04 and 24.04.
 
-1) Install nix: `sh <(curl -L https://nixos.org/nix/install) --no-daemon`
+1) Install nix:
 
-2) Add this to the end of your `.bashrc`: `. ~/.nix-profile/etc/profile.d/nix.sh`
+
+``` bash
+
+$ sh <(curl -L https://nixos.org/nix/install) --no-daemon
+
+
+```
+
+2) Add this to the end of your `.bashrc`:
+
+``` bash
+
+. ~/.nix-profile/etc/profile.d/nix.sh
+
+```
 
 3) Install home-manager:
 
