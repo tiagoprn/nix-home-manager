@@ -4,5 +4,6 @@
   home.packages = with pkgs; [
     tmux
     tmuxp  # Python-based tmux session manager
+    remind
   ];
 }
