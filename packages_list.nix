@@ -6,5 +6,7 @@
     tmuxp  # Python-based tmux session manager
     remind
     lua-language-server  # to use with neovim
+    ripgrep
+    lazygit
   ];
 }
