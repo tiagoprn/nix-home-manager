@@ -84,4 +84,77 @@ nix-channel --update && home-manager build && home-manager switch
 
 ```
 
-I have a cheatsheet [here](https://github.com/tiagoprn/devops/blob/master/cheats/nix.cheat) with those and other commands.
+## Nix Home Manager — Generic Upgrade Guide (Channels-based)
+
+### 1. Check your current channels
+
+```bash
+nix-channel --list
+```
+
+Note the current version in the URLs (e.g., `release-24.11`).
+
+### 2. Find the latest stable release
+
+Check https://endoflife.date/nixos for the current stable version and its
+security support window. Pick the most recent release that still has active
+support.
+
+### 3. Update channels to the new version
+
+Replace `NEW` with the target version (e.g., `25.11`):
+
+```bash
+nix-channel --add https://nixos.org/channels/nixos-NEW nixpkgs
+nix-channel --add https://github.com/nix-community/home-manager/archive/release-NEW.tar.gz home-manager
+nix-channel --update
+```
+
+> Both channels must match the same release number.
+
+### 4. Build first — do not apply yet
+
+```bash
+home-manager build
+```
+
+Fix any errors or deprecation warnings before proceeding.
+
+### 5. Apply the configuration
+
+```bash
+home-manager switch
+```
+
+### 6. Verify
+
+```bash
+home-manager --version
+nix-channel --list
+```
+
+### 7. Rollback if something breaks
+
+```bash
+home-manager generations          # list available generations
+home-manager switch --rollback    # revert to the previous generation
+```
+
+### Notes on `home.stateVersion`
+
+- **Do NOT change `home.stateVersion` routinely.** It should remain at the
+  value set when you first installed Home Manager.
+- It controls stateful data migration behavior, not which packages are
+  installed.
+- Only bump it intentionally after reading the release notes at
+  https://nix-community.github.io/home-manager/release-notes.xhtml
+
+### Regular (non-major) package updates
+
+No channel change needed — just run:
+
+```bash
+nix-channel --update && home-manager build && home-manager switch
+```
+
+> IMPORTANT: I have a cheatsheet [here](https://github.com/tiagoprn/devops/blob/master/cheats/nix.cheat) with those and other commands.

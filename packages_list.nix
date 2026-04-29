@@ -8,5 +8,6 @@
     lua-language-server  # to use with neovim
     ripgrep
     lazygit
+    zk
   ];
 }
