@@ -158,3 +158,68 @@ nix-channel --update && home-manager build && home-manager switch
 ```
 
 > IMPORTANT: I have a cheatsheet [here](https://github.com/tiagoprn/devops/blob/master/cheats/nix.cheat) with those and other commands.
+
+## Pinned package: lazygit
+
+`lazygit` is pinned to a specific nixpkgs revision instead of following the
+nixos-26.05 channel.
+
+**Why:** the stable channel carries lazygit 0.61.1 and stable channels do not
+receive feature-version bumps after their release cut, so newer lazygit
+releases will not arrive there until the next stable release. To use the
+newest lazygit (currently 0.64.1) without pulling every other package off the
+stable channel, only lazygit is sourced from a pinned nixpkgs commit that
+contains the 0.64.1 bump.
+
+**How:** `packages_list.nix` defines `pinnedNixpkgs` with
+`builtins.fetchTarball`, pointing at nixpkgs commit
+`9c2bb5ac1738c8c53bf9989f32e332d3eac2d3e7` (lazygit 0.64.1, merged into
+nixpkgs on 2026-08-12), and `home.packages` appends `pinnedNixpkgs.lazygit`.
+Every other package still comes from the nixos-26.05 channel.
+
+### Updating lazygit when a new release is available
+
+1. Find the nixpkgs commit that bumps lazygit to the new version (look for a
+   commit message like `lazygit: <old> -> <new>` touching
+   `pkgs/by-name/la/lazygit/package.nix`):
+
+   ```bash
+   curl -s "https://api.github.com/repos/NixOS/nixpkgs/commits?path=pkgs/by-name/la/lazygit/package.nix&sha=master&per_page=10"
+   ```
+
+   or browse https://github.com/NixOS/nixpkgs/commits/master/pkgs/by-name/la/lazygit/package.nix.
+   Copy the full commit SHA (40 hex characters).
+
+2. Compute the hash of the unpacked tarball for that commit. The `--unpack`
+   flag matters: `fetchTarball` validates the unpacked content, not the
+   compressed archive:
+
+   ```bash
+   nix-prefetch-url --unpack https://github.com/NixOS/nixpkgs/archive/<FULL-SHA>.tar.gz
+   ```
+
+   This prints a base32 hash. Convert it to SRI form if you prefer (both
+   forms are accepted by `fetchTarball`):
+
+   ```bash
+   nix --extra-experimental-features nix-command hash convert --hash-algo sha256 --to sri <BASE32-HASH>
+   ```
+
+3. Edit `packages_list.nix`: replace the commit SHA in the `url` and the
+   `sha256` value inside the `pinnedNixpkgs` `fetchTarball` block.
+
+4. Build and verify without switching:
+
+   ```bash
+   home-manager build
+   ./result/home-path/bin/lazygit --version   # expect the new version
+   ```
+
+5. Apply and verify:
+
+   ```bash
+   home-manager switch
+   lazygit --version
+   ```
+
+   If something breaks, roll back with `home-manager switch --rollback`.
