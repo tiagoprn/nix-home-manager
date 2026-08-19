@@ -105,8 +105,8 @@ support.
 Replace `NEW` with the target version (e.g., `25.11`):
 
 ```bash
-nix-channel --add https://nixos.org/channels/nixos-NEW nixpkgs
-nix-channel --add https://github.com/nix-community/home-manager/archive/release-NEW.tar.gz home-manager
+nix-channel --add https://nixos.org/channels/nixos-NEW nixpkgs && \
+nix-channel --add https://github.com/nix-community/home-manager/archive/release-NEW.tar.gz home-manager && \
 nix-channel --update
 ```
 
@@ -129,7 +129,7 @@ home-manager switch
 ### 6. Verify
 
 ```bash
-home-manager --version
+home-manager --version && \
 nix-channel --list
 ```
 
